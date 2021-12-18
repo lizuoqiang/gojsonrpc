@@ -2,7 +2,7 @@ package server
 
 import (
 	"fmt"
-	"github.com/sunquakes/jsonrpc4go/common"
+	"github.com/lizuoqiang/gojsonrpc/common"
 	"golang.org/x/time/rate"
 	"io/ioutil"
 	"log"

@@ -2,7 +2,7 @@ package client
 
 import (
 	"fmt"
-	"github.com/sunquakes/jsonrpc4go/common"
+	"github.com/lizuoqiang/gojsonrpc/common"
 	"net"
 	"strconv"
 	"time"

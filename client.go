@@ -2,7 +2,7 @@ package jsonrpc4go
 
 import (
 	"errors"
-	"github.com/sunquakes/jsonrpc4go/client"
+	"github.com/lizuoqiang/gojsonrpc/client"
 )
 
 type ClientInterface interface {

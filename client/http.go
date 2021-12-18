@@ -3,7 +3,7 @@ package client
 import (
 	"bytes"
 	"fmt"
-	"github.com/sunquakes/jsonrpc4go/common"
+	"github.com/lizuoqiang/gojsonrpc/common"
 	"io/ioutil"
 	"net/http"
 	"strconv"
