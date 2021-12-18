@@ -1,4 +1,4 @@
-module github.com/sunquakes/jsonrpc4go
+module github.com/lizuoqiang/gojsonrpc
 
 go 1.15
 
