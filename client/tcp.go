@@ -110,24 +110,35 @@ func (p *Tcp) handleFunc(b []byte, result interface{}) error {
 	//l := len([]byte(p.Options.PackageEof))
 	//buf = buf[:n-l]
 
+	p.Conn.SetReadDeadline(time.Now().Add(15 * time.Second))
 	var buf = make([]byte, p.Options.PackageMaxLength)
-	var tmp = make([]byte, 2048)
-	for {
-		_, err := p.Conn.Read(tmp)
-		fmt.Println("read: ", string(tmp), ",err:", err)
-		if err != nil {
-			if err != io.EOF {
-				return err
-			}
-			break
-		}
-		buf = append(buf, tmp...)
+	_, err = io.ReadFull(p.Conn, buf)
+	if err != nil {
+		return err
 	}
-	//todo
-	fmt.Println("buf1:", string(buf))
+	fmt.Println("buf:", string(buf))
 	eofLen := len([]byte(p.Options.PackageEof))
 	bufLen := len(buf)
 	buf = buf[:bufLen-eofLen]
+
+	//var buf = make([]byte, p.Options.PackageMaxLength)
+	//var tmp = make([]byte, 2048)
+	//for {
+	//	_, err := p.Conn.Read(tmp)
+	//	fmt.Println("read: ", string(tmp), ",err:", err)
+	//	if err != nil {
+	//		if err != io.EOF {
+	//			return err
+	//		}
+	//		break
+	//	}
+	//	buf = append(buf, tmp...)
+	//}
+	////todo
+	//fmt.Println("buf1:", string(buf))
+	//eofLen := len([]byte(p.Options.PackageEof))
+	//bufLen := len(buf)
+	//buf = buf[:bufLen-eofLen]
 	//todo
 	fmt.Println("buf2:", string(buf))
 	err = common.GetResult(buf, result)
