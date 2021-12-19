@@ -28,7 +28,7 @@ func NewTcpClient(ip string, port string) (*Tcp, error) {
 	}
 	var addr = fmt.Sprintf("%s:%s", ip, port)
 	//conn, err := net.Dial("tcp", addr)
-	conn, err := net.DialTimeout("tcp", addr, time.Second * 10)
+	conn, err := net.DialTimeout("tcp", addr, time.Second*10)
 	if err != nil {
 		return nil, err
 	}
@@ -103,11 +103,15 @@ func (p *Tcp) handleFunc(b []byte, result interface{}) error {
 	}
 	var buf = make([]byte, p.Options.PackageMaxLength)
 	n, err := p.Conn.Read(buf)
+	//todo
+	fmt.Println("buf:", string(buf), ",n:", n, ",err:", err)
 	if err != nil {
 		return err
 	}
 	l := len([]byte(p.Options.PackageEof))
 	buf = buf[:n-l]
+	//todo
+	fmt.Println("buf2:", string(buf))
 	err = common.GetResult(buf, result)
 	return err
 }
