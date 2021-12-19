@@ -1,4 +1,8 @@
 github.com/goinggo/mapstructure v0.0.0-20140717182941-194205d9b4a9 h1:wqckanyE9qc/XnvnybC6SHOb8Nyd62QXAZOzA8twFig=
 github.com/goinggo/mapstructure v0.0.0-20140717182941-194205d9b4a9/go.mod h1:64ikIrMv84B+raz7akXOqbF7cK3/OQQ/6cClY10oy7A=
+github.com/sunquakes/jsonrpc4go v1.4.0 h1:ddKnVzJMkIMhg97qR2SiddURaoPfPee4wUtt0sZ5b+8=
+github.com/sunquakes/jsonrpc4go v1.4.0/go.mod h1:3vwtpCNsJUe1gp4eQ7AkLmWD8Vs3hup+LoKV7AWjCDA=
 golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac h1:7zkz7BUtwNFFqcowJ+RIgu2MaV/MapERkDIy+mwPyjs=
 golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac/go.mod h1:tRJNPiyCQ0inRvYxbN9jk5I+vvW/OXSQhTDSoE431IQ=
+golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11 h1:GZokNIeuVkl3aZHJchRrr13WCsols02MLUcz1U9is6M=
+golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11/go.mod h1:tRJNPiyCQ0inRvYxbN9jk5I+vvW/OXSQhTDSoE431IQ=
