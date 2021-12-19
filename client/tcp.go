@@ -24,7 +24,7 @@ type TcpOptions struct {
 func NewTcpClient(ip string, port string) (*Tcp, error) {
 	options := TcpOptions{
 		"\r\n",
-		1024 * 1024 * 10,
+		1024 * 1024 * 100,
 	}
 	var addr = fmt.Sprintf("%s:%s", ip, port)
 	//conn, err := net.Dial("tcp", addr)
