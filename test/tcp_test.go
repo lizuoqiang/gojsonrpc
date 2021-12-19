@@ -3,10 +3,10 @@ package test
 import (
 	"encoding/json"
 	"errors"
-	"github.com/sunquakes/jsonrpc4go"
-	"github.com/sunquakes/jsonrpc4go/client"
-	"github.com/sunquakes/jsonrpc4go/common"
-	"github.com/sunquakes/jsonrpc4go/server"
+	"github.com/lizuoqiang/gojsonrpc"
+	"github.com/lizuoqiang/gojsonrpc/client"
+	"github.com/lizuoqiang/gojsonrpc/common"
+	"github.com/lizuoqiang/gojsonrpc/server"
 	"testing"
 	"time"
 )

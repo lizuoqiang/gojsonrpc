@@ -1,7 +1,7 @@
-# jsonrpc4go
+# jsonrpc4go fork from "github.com/sunquakes/jsonrpc4go"
 ## Installing
 ```
-go get -u github.com/sunquakes/jsonrpc4go
+go get -u github.com/lizuoqiang/gojsonrpc
 ```
 ## Getting started
 - Server
@@ -9,8 +9,7 @@ go get -u github.com/sunquakes/jsonrpc4go
 package main
 
 import (
-    "github.com/sunquakes/jsonrpc4go"
-    // "github.com/sunquakes/jsonrpc4go/server"// Custom package EOF when the protocol is tcp
+    "github.com/lizuoqiang/gojsonrpc"
 )
 
 type IntRpc struct{}
@@ -64,8 +63,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/sunquakes/jsonrpc4go"
-	// "github.com/sunquakes/jsonrpc4go/client" // Custom package EOF when the protocol is tcp
+	"github.com/lizuoqiang/gojsonrpc"
 )
 
 type Params struct {

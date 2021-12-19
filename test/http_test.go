@@ -1,8 +1,8 @@
 package test
 
 import (
-	"github.com/sunquakes/jsonrpc4go"
-	"github.com/sunquakes/jsonrpc4go/common"
+	"github.com/lizuoqiang/gojsonrpc"
+	"github.com/lizuoqiang/gojsonrpc/common"
 	"testing"
 	"time"
 )
