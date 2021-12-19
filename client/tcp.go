@@ -113,14 +113,15 @@ func (p *Tcp) handleFunc(b []byte, result interface{}) error {
 	var buf = make([]byte, p.Options.PackageMaxLength)
 	var tmp = make([]byte, 1024)
 	for {
-		n, err := p.Conn.Read(tmp)
+		_, err := p.Conn.Read(tmp)
+		fmt.Println("read: ", string(tmp), ",err:", err)
 		if err != nil {
 			if err != io.EOF {
 				return err
 			}
 			break
 		}
-		buf = append(buf, tmp[:n]...)
+		buf = append(buf, tmp...)
 	}
 	//todo
 	fmt.Println("buf1:", string(buf))
