@@ -111,7 +111,7 @@ func (p *Tcp) handleFunc(b []byte, result interface{}) error {
 	//buf = buf[:n-l]
 
 	var buf = make([]byte, p.Options.PackageMaxLength)
-	var tmp = make([]byte, 1024)
+	var tmp = make([]byte, 2048)
 	for {
 		_, err := p.Conn.Read(tmp)
 		fmt.Println("read: ", string(tmp), ",err:", err)
