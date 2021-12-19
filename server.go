@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/sunquakes/jsonrpc4go/common"
 	"github.com/sunquakes/jsonrpc4go/server"
-	"golang.org/x/time/rate"
 )
 
 type Error common.Error
@@ -13,7 +12,7 @@ type ServerInterface interface {
 	SetBeforeFunc(func(id interface{}, method string, params interface{}) error)
 	SetAfterFunc(func(id interface{}, method string, result interface{}) error)
 	SetOptions(interface{})
-	SetRateLimit(rate.Limit, int)
+	SetRateLimit(float64, int64)
 	Start()
 	Register(s interface{})
 }
