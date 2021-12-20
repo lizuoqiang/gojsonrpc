@@ -3,7 +3,6 @@ package client
 import (
 	"fmt"
 	"github.com/lizuoqiang/gojsonrpc/common"
-	"io"
 	"net"
 	"strconv"
 	"time"
@@ -104,34 +103,35 @@ func (p *Tcp) handleFunc(b []byte, result interface{}) error {
 	if err != nil {
 		return err
 	}
-	//var buf = make([]byte, p.Options.PackageMaxLength)
-	//p.Conn.SetReadDeadline(time.Now().Add(p.Options.ReadTimeOut * time.Second))
-	//n, err := p.Conn.Read(buf)
-	//fmt.Println("buf:", string(buf), ",n:", n, ",err:", err)
-	//if err != nil {
-	//	return err
-	//}
-	//l := len([]byte(p.Options.PackageEof))
-	//buf = buf[:n-l]
-
+	p.Conn.SetReadDeadline(time.Now().Add(time.Duration(p.Options.ReadTimeOut) * time.Second))
 	var buf = make([]byte, p.Options.PackageMaxLength)
-	var tmp = make([]byte, 1024*4)
-	for {
-		n, err := p.Conn.Read(tmp)
-		fmt.Println("read: ", string(tmp), ",err:", err)
-		if err != nil {
-			if err == io.EOF {
-				break
-			}
-			return err
-		}
-		buf = append(buf, tmp[:n]...)
+	n, err := p.Conn.Read(buf)
+	fmt.Println("buf:", string(buf), ",n:", n, ",err:", err)
+	if err != nil {
+		return err
 	}
-	//todo
-	fmt.Println("buf1:", string(buf))
-	eofLen := len([]byte(p.Options.PackageEof))
-	bufLen := len(buf)
-	buf = buf[:bufLen-eofLen]
+	l := len([]byte(p.Options.PackageEof))
+	buf = buf[:n-l]
+
+	//var buf = make([]byte, p.Options.PackageMaxLength)
+	//var tmp = make([]byte, 1024*4)
+	//for {
+	//	n, err := p.Conn.Read(tmp)
+	//	fmt.Println("read: ", string(tmp), ",err:", err)
+	//	if err != nil {
+	//		if err == io.EOF {
+	//			break
+	//		}
+	//		return err
+	//	}
+	//	buf = append(buf, tmp[:n]...)
+	//}
+	////todo
+	//fmt.Println("buf1:", string(buf))
+	//eofLen := len([]byte(p.Options.PackageEof))
+	//bufLen := len(buf)
+	//buf = buf[:bufLen-eofLen]
+
 	//todo
 	fmt.Println("buf2:", string(buf), len(string(buf)))
 	err = common.GetResult(buf, result)
