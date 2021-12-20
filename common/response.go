@@ -3,7 +3,6 @@ package common
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/goinggo/mapstructure"
 	"reflect"
 )
@@ -110,7 +109,6 @@ func GetResult(b []byte, result interface{}) error {
 		jsonData interface{}
 	)
 	err = json.Unmarshal(b, &jsonData)
-	fmt.Println("jsonData:", jsonData, ",err:", err)
 	if err != nil {
 		Debug(err)
 	}

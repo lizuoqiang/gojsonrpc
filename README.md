@@ -1,4 +1,4 @@
-# jsonrpc4go fork from "github.com/sunquakes/jsonrpc4go"
+# jsonrpc4go fork from github.com/sunquakes/jsonrpc4go
 ## Installing
 ```
 go get -u github.com/lizuoqiang/gojsonrpc

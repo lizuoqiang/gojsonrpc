@@ -2,8 +2,8 @@ package jsonrpc4go
 
 import (
 	"errors"
-	"github.com/sunquakes/jsonrpc4go/common"
-	"github.com/sunquakes/jsonrpc4go/server"
+	"github.com/lizuoqiang/gojsonrpc/common"
+	"github.com/lizuoqiang/gojsonrpc/server"
 )
 
 type Error common.Error

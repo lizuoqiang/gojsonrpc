@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"golang.org/x/time/rate"
+	"github.com/lizuoqiang/gojsonrpc/components/rate_limit"
 	"reflect"
 	"strings"
 	"sync"
@@ -25,9 +25,9 @@ type Service struct {
 }
 
 type Server struct {
-	Sm          sync.Map
-	Hooks       Hooks
-	RateLimiter *rate.Limiter
+	Sm        sync.Map
+	Hooks     Hooks
+	RateLimit *rate_limit.RateLimit
 }
 
 type Hooks struct {
@@ -128,7 +128,7 @@ func (svr *Server) SingleHandler(jsonMap map[string]interface{}) interface{} {
 		return E(id, jsonRpc, errCode)
 	}
 
-	if svr.RateLimiter != nil && !svr.RateLimiter.Allow() {
+	if !svr.RateLimit.GetToken(false) {
 		return CE(id, JsonRpc, "Too many requests")
 	}
 

@@ -19,18 +19,15 @@ type Tcp struct {
 type TcpOptions struct {
 	PackageEof       string
 	PackageMaxLength int32
-	ReadTimeOut      int
 }
 
 func NewTcpClient(ip string, port string) (*Tcp, error) {
 	options := TcpOptions{
 		"\r\n",
 		1024 * 1024 * 2,
-		15,
 	}
 	var addr = fmt.Sprintf("%s:%s", ip, port)
 	conn, err := net.Dial("tcp", addr)
-	//conn, err := net.DialTimeout("tcp", addr, time.Second*10)
 	if err != nil {
 		return nil, err
 	}
@@ -103,37 +100,13 @@ func (p *Tcp) handleFunc(b []byte, result interface{}) error {
 	if err != nil {
 		return err
 	}
-	p.Conn.SetReadDeadline(time.Now().Add(time.Duration(p.Options.ReadTimeOut) * time.Second))
 	var buf = make([]byte, p.Options.PackageMaxLength)
 	n, err := p.Conn.Read(buf)
-	fmt.Println("buf:", string(buf), ",n:", n, ",err:", err)
 	if err != nil {
 		return err
 	}
 	l := len([]byte(p.Options.PackageEof))
 	buf = buf[:n-l]
-
-	//var buf = make([]byte, p.Options.PackageMaxLength)
-	//var tmp = make([]byte, 1024*4)
-	//for {
-	//	n, err := p.Conn.Read(tmp)
-	//	fmt.Println("read: ", string(tmp), ",err:", err)
-	//	if err != nil {
-	//		if err == io.EOF {
-	//			break
-	//		}
-	//		return err
-	//	}
-	//	buf = append(buf, tmp[:n]...)
-	//}
-	////todo
-	//fmt.Println("buf1:", string(buf))
-	//eofLen := len([]byte(p.Options.PackageEof))
-	//bufLen := len(buf)
-	//buf = buf[:bufLen-eofLen]
-
-	//todo
-	fmt.Println("buf2:", string(buf), len(string(buf)))
 	err = common.GetResult(buf, result)
 	return err
 }
