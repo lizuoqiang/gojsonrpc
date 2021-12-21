@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/lizuoqiang/gojsonrpc/common"
 	"net"
+	"reflect"
 	"strconv"
 	"time"
 )
@@ -19,12 +20,14 @@ type Tcp struct {
 type TcpOptions struct {
 	PackageEof       string
 	PackageMaxLength int32
+	TimeOut          int
 }
 
 func NewTcpClient(ip string, port string) (*Tcp, error) {
 	options := TcpOptions{
 		"\r\n",
 		1024 * 1024 * 2,
+		15,
 	}
 	var addr = fmt.Sprintf("%s:%s", ip, port)
 	conn, err := net.Dial("tcp", addr)
@@ -95,19 +98,35 @@ func (p *Tcp) Call(method string, params interface{}, result interface{}, isNoti
 }
 
 func (p *Tcp) handleFunc(b []byte, result interface{}) error {
+	// 读写超时时间
+	p.Conn.SetDeadline(time.Now().Add(time.Duration(p.Options.TimeOut) * time.Second))
+
+	// 传递参数
 	var err error
 	_, err = p.Conn.Write(b)
 	if err != nil {
 		return err
 	}
+
+	// 定义接收buffer
 	var buf = make([]byte, p.Options.PackageMaxLength)
-	n, err := p.Conn.Read(buf)
-	fmt.Println("buffer", string(buf), n, err)
-	if err != nil {
-		return err
+	var tmp = make([]byte, 1024)
+	for {
+		n, err := p.Conn.Read(tmp)
+		if err != nil {
+			return err
+		}
+		buf = append(buf, tmp[:n]...)
+		// 判断是否结束
+		if reflect.DeepEqual(tmp[n-2:], []byte(p.Options.PackageEof)) {
+			break
+		}
 	}
-	l := len([]byte(p.Options.PackageEof))
-	buf = buf[:n-l]
+
+	// 截取掉结束符
+	eofLen := len([]byte(p.Options.PackageEof))
+	bufLen := len(buf)
+	buf = buf[:bufLen-eofLen]
 	err = common.GetResult(buf, result)
 	return err
 }
