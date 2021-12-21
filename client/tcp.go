@@ -1,6 +1,7 @@
 package client
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/lizuoqiang/gojsonrpc/common"
 	"net"
@@ -99,7 +100,7 @@ func (p *Tcp) Call(method string, params interface{}, result interface{}, isNoti
 
 func (p *Tcp) handleFunc(b []byte, result interface{}) error {
 	// 读写超时时间
-	p.Conn.SetDeadline(time.Now().Add(time.Duration(p.Options.TimeOut) * time.Second))
+	_ = p.Conn.SetDeadline(time.Now().Add(time.Duration(p.Options.TimeOut) * time.Second))
 
 	// 传递参数
 	var err error
@@ -109,24 +110,31 @@ func (p *Tcp) handleFunc(b []byte, result interface{}) error {
 	}
 
 	// 定义接收buffer
-	var buf = make([]byte, p.Options.PackageMaxLength)
-	var tmp = make([]byte, 1024)
+	var (
+		buf = make([]byte, p.Options.PackageMaxLength)
+		tmp = make([]byte, 1024)
+		num = 0
+	)
+
+	// 接收数据
 	for {
 		n, err := p.Conn.Read(tmp)
 		if err != nil {
 			return err
 		}
 		buf = append(buf, tmp[:n]...)
+		num = len(buf)
 		// 判断是否结束
-		if reflect.DeepEqual(tmp[n-2:], []byte(p.Options.PackageEof)) {
+		if reflect.DeepEqual(buf[num-2:], []byte(p.Options.PackageEof)) {
 			break
 		}
 	}
-
 	// 截取掉结束符
 	eofLen := len([]byte(p.Options.PackageEof))
-	bufLen := len(buf)
-	buf = buf[:bufLen-eofLen]
+	buf = buf[:num-eofLen]
+	// 移除切面填充的0
+	buf = bytes.Trim(buf, "\x00")
+	// 解析json
 	err = common.GetResult(buf, result)
 	return err
 }
