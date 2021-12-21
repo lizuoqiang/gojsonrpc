@@ -111,9 +111,10 @@ func (p *Tcp) handleFunc(b []byte, result interface{}) error {
 
 	// 定义接收buffer
 	var (
-		buf = make([]byte, p.Options.PackageMaxLength)
-		tmp = make([]byte, 1024)
-		num = 0
+		buf    = make([]byte, p.Options.PackageMaxLength)
+		tmp    = make([]byte, 1024)
+		num    = 0
+		eofLen = len([]byte(p.Options.PackageEof))
 	)
 
 	// 接收数据
@@ -125,15 +126,13 @@ func (p *Tcp) handleFunc(b []byte, result interface{}) error {
 		buf = append(buf, tmp[:n]...)
 		num = len(buf)
 		// 判断是否结束
-		if reflect.DeepEqual(buf[num-2:], []byte(p.Options.PackageEof)) {
+		if reflect.DeepEqual(buf[num-eofLen:], []byte(p.Options.PackageEof)) {
 			break
 		}
 	}
 	// 截取掉结束符
-	eofLen := len([]byte(p.Options.PackageEof))
-	buf = buf[:num-eofLen]
 	// 移除切面填充的0
-	buf = bytes.Trim(buf, "\x00")
+	buf = bytes.Trim(buf[:num-eofLen], "\x00")
 	// 解析json
 	err = common.GetResult(buf, result)
 	return err

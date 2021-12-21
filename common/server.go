@@ -39,7 +39,16 @@ func (svr *Server) Register(s interface{}) error {
 	svc := new(Service)
 	svc.V = reflect.ValueOf(s)
 	svc.T = reflect.TypeOf(s)
-	sname := reflect.Indirect(svc.V).Type().Name()
+	sname := ""
+	// 动态获取serverName
+	getServerName := svc.V.MethodByName("GetServerName")
+	// 检测方法是否存在
+	if getServerName.IsValid() {
+		res := getServerName.Call([]reflect.Value{})
+		sname = res[0].String()
+	} else {
+		reflect.Indirect(svc.V).Type().Name()
+	}
 	svc.Name = sname
 	svc.Mm = RegisterMethods(svc.T)
 	if _, err := svr.Sm.LoadOrStore(sname, svc); err {
