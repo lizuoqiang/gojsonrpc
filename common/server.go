@@ -47,7 +47,7 @@ func (svr *Server) Register(s interface{}) error {
 		res := getServerName.Call([]reflect.Value{})
 		sname = res[0].String()
 	} else {
-		reflect.Indirect(svc.V).Type().Name()
+		sname = reflect.Indirect(svc.V).Type().Name()
 	}
 	svc.Name = sname
 	svc.Mm = RegisterMethods(svc.T)
