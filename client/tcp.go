@@ -1,13 +1,13 @@
 package client
 
 import (
-	"bytes"
 	"fmt"
-	"github.com/lizuoqiang/gojsonrpc/common"
 	"net"
 	"reflect"
 	"strconv"
 	"time"
+
+	"github.com/lizuoqiang/gojsonrpc/common"
 )
 
 type Tcp struct {
@@ -111,9 +111,9 @@ func (p *Tcp) handleFunc(b []byte, result interface{}) error {
 
 	// 定义接收buffer
 	var (
-		buf    = make([]byte, p.Options.PackageMaxLength)
-		tmp    = make([]byte, 1024)
 		num    = 0
+		buf    = make([]byte, 0, p.Options.PackageMaxLength)
+		tmp    = make([]byte, 1024)
 		eofLen = len([]byte(p.Options.PackageEof))
 	)
 
@@ -131,8 +131,7 @@ func (p *Tcp) handleFunc(b []byte, result interface{}) error {
 		}
 	}
 	// 截取掉结束符
-	// 移除切面填充的0
-	buf = bytes.Trim(buf[:num-eofLen], "\x00")
+	buf = buf[:num-eofLen]
 	// 解析json
 	err = common.GetResult(buf, result)
 	return err
