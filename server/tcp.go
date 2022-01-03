@@ -1,13 +1,15 @@
 package server
 
 import (
+	"bytes"
 	"context"
 	"fmt"
-	"github.com/lizuoqiang/gojsonrpc/common"
-	"github.com/lizuoqiang/gojsonrpc/components/rate_limit"
 	"log"
 	"net"
 	"sync"
+
+	"github.com/lizuoqiang/gojsonrpc/common"
+	"github.com/lizuoqiang/gojsonrpc/components/rate_limit"
 )
 
 type Tcp struct {
@@ -88,19 +90,33 @@ func (p *Tcp) handleFunc(ctx context.Context, conn net.Conn) {
 	default:
 		//	do nothing
 	}
+
+	eof := []byte(p.Options.PackageEof)
+	eofLen := len(eof)
 	for {
-		var buf = make([]byte, p.Options.PackageMaxLength)
-		n, err := conn.Read(buf)
-		if err != nil {
-			if n == 0 {
-				continue
+		var (
+			num  = 0
+			data []byte
+		)
+		// 接收参数
+		for {
+			var buf = make([]byte, p.Options.PackageMaxLength)
+			n, err := conn.Read(buf)
+			if err != nil {
+				if n == 0 {
+					return
+				}
+				common.Debug(err.Error())
 			}
-			common.Debug(err.Error())
-			break
+			num += n
+			data = append(data, buf[:n]...)
+			if bytes.Equal(data[num-eofLen:], eof) {
+				break
+			}
 		}
-		l := len([]byte(p.Options.PackageEof))
-		res := p.Server.Handler(buf[:n-l])
-		res = append(res, []byte(p.Options.PackageEof)...)
+		// 处理请求
+		res := p.Server.Handler(data[:num-eofLen])
+		res = append(res, eof...)
 		conn.Write(res)
 	}
 }

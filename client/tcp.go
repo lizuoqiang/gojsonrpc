@@ -1,9 +1,9 @@
 package client
 
 import (
+	"bytes"
 	"fmt"
 	"net"
-	"reflect"
 	"strconv"
 	"time"
 
@@ -109,30 +109,27 @@ func (p *Tcp) handleFunc(b []byte, result interface{}) error {
 		return err
 	}
 
-	// 定义接收buffer
+	eof := []byte(p.Options.PackageEof)
+	eofLen := len(eof)
 	var (
-		num    = 0
-		buf    = make([]byte, 0, p.Options.PackageMaxLength)
-		tmp    = make([]byte, 1024)
-		eofLen = len([]byte(p.Options.PackageEof))
+		num  = 0
+		data []byte
 	)
-
-	// 接收数据
 	for {
-		n, err := p.Conn.Read(tmp)
+		var buf = make([]byte, p.Options.PackageMaxLength)
+		n, err := p.Conn.Read(buf)
 		if err != nil {
-			return err
+			if n == 0 {
+				return err
+			}
+			common.Debug(err.Error())
 		}
-		buf = append(buf, tmp[:n]...)
-		num = len(buf)
-		// 判断是否结束
-		if reflect.DeepEqual(buf[num-eofLen:], []byte(p.Options.PackageEof)) {
+		num += n
+		data = append(data, buf[:n]...)
+		if bytes.Equal(data[num-eofLen:], eof) {
 			break
 		}
 	}
-	// 截取掉结束符
-	buf = buf[:num-eofLen]
-	// 解析json
-	err = common.GetResult(buf, result)
+	err = common.GetResult(data[:num-eofLen], result)
 	return err
 }
