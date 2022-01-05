@@ -35,24 +35,14 @@ type Hooks struct {
 	AfterFunc  func(id interface{}, method string, result interface{}) error
 }
 
-func (svr *Server) Register(s interface{}) error {
+func (svr *Server) Register(s interface{}, sName string) error {
 	svc := new(Service)
 	svc.V = reflect.ValueOf(s)
 	svc.T = reflect.TypeOf(s)
-	sname := ""
-	// 动态获取serverName
-	getServerName := svc.V.MethodByName("GetServerName")
-	// 检测方法是否存在
-	if getServerName.IsValid() {
-		res := getServerName.Call([]reflect.Value{})
-		sname = res[0].String()
-	} else {
-		sname = reflect.Indirect(svc.V).Type().Name()
-	}
-	svc.Name = sname
+	svc.Name = sName
 	svc.Mm = RegisterMethods(svc.T)
-	if _, err := svr.Sm.LoadOrStore(sname, svc); err {
-		return errors.New("rpc: service already defined: " + sname)
+	if _, err := svr.Sm.LoadOrStore(sName, svc); err {
+		return errors.New("rpc: service already defined: " + sName)
 	}
 	return nil
 }

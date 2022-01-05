@@ -48,8 +48,8 @@ func (p *Http) Start() {
 	http.ListenAndServe(url, mux)
 }
 
-func (p *Http) Register(s interface{}) {
-	p.Server.Register(s)
+func (p *Http) Register(s interface{}, sName string) {
+	p.Server.Register(s, sName)
 }
 
 func (p *Http) SetOptions(httpOptions interface{}) {

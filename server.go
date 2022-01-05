@@ -14,7 +14,7 @@ type ServerInterface interface {
 	SetOptions(interface{})
 	SetRateLimit(float64, int64)
 	Start()
-	Register(s interface{})
+	Register(s interface{}, sName string)
 }
 
 func NewServer(protocol string, ip string, port string) (ServerInterface, error) {

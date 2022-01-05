@@ -62,8 +62,8 @@ func (p *Tcp) Start() {
 	}
 }
 
-func (p *Tcp) Register(s interface{}) {
-	p.Server.Register(s)
+func (p *Tcp) Register(s interface{}, sName string) {
+	p.Server.Register(s, sName)
 }
 
 func (p *Tcp) SetOptions(tcpOptions interface{}) {

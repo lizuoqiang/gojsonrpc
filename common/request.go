@@ -83,20 +83,20 @@ func ParseRequestMethod(method string) (sName string, mName string, err error) {
 			return sName, mName, errors.New(m)
 		}
 
-		//sName = method[:sp]
-		//mName = method[sp+1:]
+		sName = method[:sp]
+		mName = method[sp+1:]
 		/*
 			/a/b_c
 			a => 定位项目(到此处已经没用了)
 			b => 具体server结构体
 			c => 方法
 		*/
-		sp := strings.LastIndex(method, "/")
-		serverAndName := method[sp+1:]
-		sp = strings.LastIndex(serverAndName, "_")
-
-		sName = serverAndName[:sp]
-		mName = serverAndName[sp+1:]
+		//sp := strings.LastIndex(method, "/")
+		//serverAndName := method[sp+1:]
+		//sp = strings.LastIndex(serverAndName, "_")
+		//
+		//sName = serverAndName[:sp]
+		//mName = serverAndName[sp+1:]
 	}
 	return sName, mName, err
 }
